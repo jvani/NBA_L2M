@@ -111,26 +111,28 @@ if __name__ == "__main__":
     times = []
 
     for idx, (link, pdf_name) in enumerate(links):
-        if idx != 0:
-            os.system("rm " + pdf_path + "*") # Clear temp folder.
+        try:
+            try:
+                os.system("rm " + pdf_path + "*") # Clear temp folder.
+            except:
+                pass
+            pdf = os.path.join(pdf_path, pdf_name) # Define local pdf path.
+            urllib.urlretrieve(link, pdf) # Download L2M.
+            split_pdf_pages(pdf) # Split pdf into seperate pages.
+            calls, report = scrape_l2m(pdf_path) # Scrape all pages.
+            report.extend([link, 'Nan']) # Add link & 'season' filler to data.
 
-        pdf = os.path.join(pdf_path, pdf_name) # Define local pdf path.
+            c.execute("""
+            INSERT OR IGNORE INTO reports
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""", report)
 
-        urllib.urlretrieve(link, pdf) # Download L2M.
-        split_pdf_pages(pdf) # Split pdf into seperate pages.
-        calls, report = scrape_l2m(pdf_path) # Scrape all pages.
-        report.extend([link, 'Nan']) # Add link & 'season' filler to data.
+            c.executemany("""
+            INSERT OR IGNORE INTO calls
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""", calls)
 
-        c.execute("""
-        INSERT OR IGNORE INTO reports
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""", report)
-
-        c.executemany("""
-        INSERT OR IGNORE INTO calls
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""", calls)
-
-        print "\r{3} {0:.2f}% Complete, ({1}/{2})".format(
-        (float(idx + 1) / n) * 100, idx, n, pdf),
-
-    conn.commit()
+            conn.commit()
+            print "\r{3} {0:.2f}% Complete, ({1}/{2})".format(
+            (float(idx + 1) / n) * 100, idx, n, pdf),
+        except:
+            pass
     conn.close()
