@@ -61,7 +61,7 @@ def split_pdf_pages(pdf_path):
     for i in range(opened_pdf.numPages):
         output = PyPDF2.PdfFileWriter()
         output.addPage(opened_pdf.getPage(i))
-        with open(os.path.join(pdf_path[:-24], "{}-".format(i) + pdf_path[10:]), "wb") as output_pdf:
+        with open(os.path.join(os.path.dirname(pdf_path), "{}-".format(i) + os.path.basename(pdf_path)), "wb") as output_pdf:
             output.write(output_pdf)
     os.remove(pdf_path)
 
