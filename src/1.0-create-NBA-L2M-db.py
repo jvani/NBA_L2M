@@ -110,8 +110,10 @@ if __name__ == "__main__":
     n = len(links)
     times = []
 
-    for idx, (link, pdf_name) in enumerate(links[:10]):
-        os.system("rm " + pdf_path + "*") # Clear temp folder.
+    for idx, (link, pdf_name) in enumerate(links):
+        if idx != 0:
+            os.system("rm " + pdf_path + "*") # Clear temp folder.
+
         pdf = os.path.join(pdf_path, pdf_name) # Define local pdf path.
 
         urllib.urlretrieve(link, pdf) # Download L2M.
