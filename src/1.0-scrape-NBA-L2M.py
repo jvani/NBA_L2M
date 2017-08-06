@@ -9,6 +9,8 @@ def init_data():
         os.makedirs("../data/pdfs/")
     if not os.path.exists("../data/temp/"):
         os.makedirs("../data/temp/")
+    if not os.path.exists("../data/db/"):
+        os.makedirs("../data/db/")
 
 def l2m_pdf_name(link):
     """Returns standardized pdf_name from link.
