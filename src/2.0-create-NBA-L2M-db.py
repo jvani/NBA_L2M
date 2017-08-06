@@ -101,8 +101,8 @@ def scrape_l2ms(L2M_path, temp_path):
                                 math.floor(y0 - 11), math.ceil(y0 + 14))).text()
                         # if peri.startswith("Q"):
                         calls.append([pdf_filename[:-4], peri, time, call, comm, disa, deci, "NaN", "NaN"])
-            except:
-                pass
+        except:
+            pass
 
         n = len(pdf_filenames)
         sys.stdout.write("\r({2}/{3}) {1:.2f}% Complete, {0}".format(pdf_filename, (float(idx + 1) / n) * 100, idx + 1, n))
