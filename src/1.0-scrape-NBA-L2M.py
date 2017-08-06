@@ -4,6 +4,12 @@ import sys
 import urllib
 from bs4 import BeautifulSoup
 
+def init_data():
+    if not os.path.exists("../data/pdfs/"):
+        os.makedirs("../data/pdfs/")
+    if not os.path.exists("../data/temp/"):
+        os.makedirs("../data/temp/")
+
 def l2m_pdf_name(link):
     """Returns standardized pdf_name from link.
     link - pdf url from NBA L2M archive"""
@@ -42,14 +48,14 @@ def get_l2m_links(url):
     return l2ms
 
 if __name__ == "__main__":
-    pdf_path = "../data/pdfs/"
+    init_data()
     # Get all L2M pdf links from nba.com archive.
     links = get_l2m_links("http://official.nba.com/nba-last-two-minute-reports-archive/")
     n = len(links)
     for idx, (link, pdf_name) in enumerate(links):
         # 3 links are not working as of 08/06/2017.
         try:
-            pdf = os.path.join(pdf_path, pdf_name) # Define local pdf path.
+            pdf = os.path.join("../data/pdfs/", pdf_name) # Define local pdf path.
             urllib.urlretrieve(link, pdf) # Download L2M.
             sys.stdout.write("\r({2}/{3}) {1:.2f}% Complete, {0}".format(pdf_name, (float(idx + 1) / n) * 100, idx + 1, n))
             sys.stdout.flush()
