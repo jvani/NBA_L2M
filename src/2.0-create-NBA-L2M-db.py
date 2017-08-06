@@ -5,6 +5,7 @@ import math
 import PyPDF2
 import sqlite3
 import pdfquery
+import warnings
 from datetime import datetime, timedelta
 
 def create_db(db_path):
@@ -69,36 +70,39 @@ def scrape_l2ms(L2M_path, temp_path):
     calls = []
 
     for idx, pdf_filename in enumerate(pdf_filenames): # For each report, scrape & split pages.
-        pdf_path = os.path.join(L2M_path, pdf_filename)
-        game_date = datetime.strptime(pdf_filename[12:-4], "%m-%d-%y") - timedelta(days=1)
-        reports.append([pdf_filename[:-4], pdf_filename[4:7], pdf_filename[8:11], game_date, l2m_season(game_date), "NaN", "NaN", "NaN"])
+        try:
+            pdf_path = os.path.join(L2M_path, pdf_filename)
+            game_date = datetime.strptime(pdf_filename[12:-4], "%m-%d-%y") - timedelta(days=1)
+            reports.append([pdf_filename[:-4], pdf_filename[4:7], pdf_filename[8:11], game_date, l2m_season(game_date), "NaN", "NaN", "NaN"])
 
-        split_pdf_pages(pdf_path, temp_path)
-        pdf_pages = os.listdir(temp_path)
-        for pdf_page in pdf_pages: # For each page scrape data.
-            page_path = os.path.join(temp_path, pdf_page)
-            pdf = pdfquery.PDFQuery(page_path)
-            pdf.load()
+            split_pdf_pages(pdf_path, temp_path)
+            pdf_pages = os.listdir(temp_path)
+            for pdf_page in pdf_pages: # For each page scrape data.
+                page_path = os.path.join(temp_path, pdf_page)
+                pdf = pdfquery.PDFQuery(page_path)
+                pdf.load()
 
-            # Find rows using 'Video' as anchor.
-            rows = pdf.pq("""LTTextLineHorizontal:contains("Video ")""")
-            for row in rows: # Scrape call data for each row.
-                for i in row:
-                    y0 = float(filter(lambda x: x[0] == "y0", i.items())[0][1])
-                    peri = pdf.pq("LTTextLineHorizontal:in_bbox('20, {}, 60, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    time = pdf.pq("LTTextLineHorizontal:in_bbox('60, {}, 100, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    call = pdf.pq("LTTextLineHorizontal:in_bbox('100, {}, 210, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    comm = pdf.pq("LTTextLineHorizontal:in_bbox('210, {}, 350, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    disa = pdf.pq("LTTextLineHorizontal:in_bbox('350, {}, 490, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    deci = pdf.pq("LTTextLineHorizontal:in_bbox('490, {}, 550, {}')".format(
-                            math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                    # if peri.startswith("Q"):
-                    calls.append([pdf_filename[:-4], peri, time, call, comm, disa, deci, "NaN", "NaN"])
+                # Find rows using 'Video' as anchor.
+                rows = pdf.pq("""LTTextLineHorizontal:contains("Video ")""")
+                for row in rows: # Scrape call data for each row.
+                    for i in row:
+                        y0 = float(filter(lambda x: x[0] == "y0", i.items())[0][1])
+                        peri = pdf.pq("LTTextLineHorizontal:in_bbox('20, {}, 60, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        time = pdf.pq("LTTextLineHorizontal:in_bbox('60, {}, 100, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        call = pdf.pq("LTTextLineHorizontal:in_bbox('100, {}, 210, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        comm = pdf.pq("LTTextLineHorizontal:in_bbox('210, {}, 350, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        disa = pdf.pq("LTTextLineHorizontal:in_bbox('350, {}, 490, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        deci = pdf.pq("LTTextLineHorizontal:in_bbox('490, {}, 550, {}')".format(
+                                math.floor(y0 - 11), math.ceil(y0 + 14))).text()
+                        # if peri.startswith("Q"):
+                        calls.append([pdf_filename[:-4], peri, time, call, comm, disa, deci, "NaN", "NaN"])
+            except:
+                pass
 
         n = len(pdf_filenames)
         sys.stdout.write("\r({2}/{3}) {1:.2f}% Complete, {0}".format(pdf_filename, (float(idx + 1) / n) * 100, idx + 1, n))
@@ -107,6 +111,7 @@ def scrape_l2ms(L2M_path, temp_path):
     return calls, reports
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
     db_path = "../data/db/"
     L2M_path = "../data/pdfs/"
     temp_path = "../data/temp/"
