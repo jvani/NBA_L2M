@@ -84,7 +84,6 @@ def scrape_l2ms(L2M_path, temp_path):
         sys.stdout.write("\r({2}/{3}) {1:.2f}% Complete, {0}".format(pdf_filename, (float(idx + 1) / n) * 100, idx + 1, n))
         sys.stdout.flush()
 
-    print "Completed Scraping."
     return calls, reports
 
 if __name__ == "__main__":
@@ -94,6 +93,9 @@ if __name__ == "__main__":
 
     conn, c = create_db(db_path)
     calls, reports = scrape_l2ms(L2M_path, temp_path)
+
+    sys.stdout.write("Writing data to db...")
+    sys.stdout.flush()
 
     c.executemany("""
     INSERT OR IGNORE INTO reports
@@ -105,3 +107,6 @@ if __name__ == "__main__":
 
     conn.commit()
     conn.close()
+
+    sys.stdout.write("\rComplete!")
+    sys.stdout.flush()
