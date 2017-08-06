@@ -108,7 +108,7 @@ def scrape_l2ms(L2M_path, temp_path):
 
 if __name__ == "__main__":
     db_path = "../data/db/"
-    L2M_path = "../data/pdf/"
+    L2M_path = "../data/pdfs/"
     temp_path = "../data/temp/"
 
     conn, c = create_db(db_path)
