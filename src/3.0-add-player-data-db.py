@@ -77,6 +77,22 @@ def find_players_team(df):
         sys.stdout.write("\r({0}/{1}) {2:.2f}% Complete".format(idx, n, (float(idx) / n) * 100))
         sys.stdout.flush()
 
+tms = {'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS',
+       'Brooklyn Nets': 'BKN', 'Charlotte Hornets': 'CHA',
+       'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
+       'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN',
+       'Detroit Pistons': 'DET', 'Golden State Warriors': 'GSW',
+       'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
+       'Los Angeles Clippers': 'LAC', 'Los Angeles Lakers': 'LAL',
+       'Memphis Grizzlies': 'MEM', 'Miami Heat': 'MIA',
+       'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN',
+       'New Orleans Pelicans': 'NOP', 'New York Knicks': 'NYK',
+       'Oklahoma City Thunder': 'OKC', 'Orlando Magic': 'ORL',
+       'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
+       'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC',
+       'San Antonio Spurs': 'SAS', 'Toronto Raptors': 'TOR',
+       'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'}
+
 if __name__ == "__main__":
     conn = sqlite3.connect("../data/db/NBA-L2M.db")
     c = conn.cursor()
@@ -88,7 +104,7 @@ if __name__ == "__main__":
     df = pd.merge(calls, reports, how='left', on='report')
     find_players_team(df)
     df[calls.columns].to_sql('calls', conn, if_exists='replace', index=False)
-    df[reports.columns].to_sql('reports', conn, if_exists='replace', index=False)
+    reports.to_sql('reports', conn, if_exists='replace', index=False)
 
     conn.commit()
     conn.close()
