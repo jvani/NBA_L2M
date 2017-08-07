@@ -7,13 +7,22 @@ from fuzzywuzzy import process
 def add_csv_to_db(conn):
     csv_path = "../data/csv/"
     for f in os.listdir(csv_path):
-        try:
-            df = pd.read_csv(os.path.join(csv_path, f))
-            df.Player = df.Player.str.split("\\").str[0]
-            df.replace({"Tm":{"BRK": "BKN", "CHO": "CHA", "PHO": "PHX"}}, inplace=True)
-            df.to_sql(f[:13], conn, index=False)
-        except:
-            pass
+        if f.startswith('players'):
+            try:
+                print f
+                df = pd.read_csv(os.path.join(csv_path, f))
+                df.Player = df.Player.str.split("\\").str[0]
+                df.replace({"Tm":{"BRK": "BKN", "CHO": "CHA", "PHO": "PHX"}}, inplace=True)
+                df.to_sql(f[:13], conn, index=False)
+            except:
+                pass
+        else:
+            try:
+                print f
+                df = pd.read_csv(os.path.join(csv_path, f))
+                df.to_sql(f[:13], conn, index=False)
+            except:
+                pass
 
 def players_dict(c):
     players_year = {}
