@@ -99,8 +99,8 @@ def scrape_l2ms(L2M_path, temp_path):
                                 math.floor(y0 - 11), math.ceil(y0 + 14))).text()
                         deci = pdf.pq("LTTextLineHorizontal:in_bbox('490, {}, 550, {}')".format(
                                 math.floor(y0 - 11), math.ceil(y0 + 14))).text()
-                        # if peri.startswith("Q"):
-                        calls.append([pdf_filename[:-4], peri, time, call, comm, disa, deci, "NaN", "NaN"])
+                        if peri.startswith("Q"):
+                            calls.append([pdf_filename[:-4], peri, time, call, comm, disa, deci, "NaN", "NaN"])
         except:
             pass
 
