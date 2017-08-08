@@ -1,6 +1,3 @@
-
 notebooks/.ipynb_checkpoints/
-
 *.pdf
-
-*.pdf
+*.DS_Store
