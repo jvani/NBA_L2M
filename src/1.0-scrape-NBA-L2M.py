@@ -5,6 +5,7 @@ import urllib
 from bs4 import BeautifulSoup
 
 def init_data():
+    """Create project's data folders"""
     if not os.path.exists("../data/pdfs/"):
         os.makedirs("../data/pdfs/")
     if not os.path.exists("../data/temp/"):

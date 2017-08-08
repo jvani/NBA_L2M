@@ -9,7 +9,8 @@ import warnings
 from datetime import datetime
 
 def create_db(db_path):
-    """Creates NBA-L2M.db and initial tables"""
+    """Creates NBA-L2M.db and initial tables
+    df_path - folder path to store db."""
     conn = sqlite3.connect(os.path.join(db_path, "NBA-L2M.db"))
     c = conn.cursor()
 
@@ -46,7 +47,7 @@ def split_pdf_pages(pdf_path, temp_path):
 
 def l2m_season(game_date):
     """Determine NBA season/playoffs by date str.
-    l2m_date - date string from l2m filename."""
+    game_date - date string from l2m filename."""
     if game_date > datetime(2017, 4, 14):
         return "2016-17 NBA Playoffs"
     elif game_date > datetime(2016, 9, 1):
@@ -64,7 +65,8 @@ def l2m_season(game_date):
 
 def scrape_l2ms(L2M_path, temp_path):
     """Scrape L2Ms data.
-    L2M_path - path to downloaded L2Ms"""
+    L2M_path - path to downloaded L2Ms
+    temp_path - path to split pdfs"""
     pdf_filenames = os.listdir(L2M_path)
     reports = []
     calls = []

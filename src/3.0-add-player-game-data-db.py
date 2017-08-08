@@ -5,6 +5,8 @@ import pandas as pd
 from fuzzywuzzy import process
 
 def add_csv_to_db(conn):
+    """Add additional csvs to db.
+    conn - sqlite3 connection."""
     csv_path = "../data/csv/"
     for f in os.listdir(csv_path):
         if f.startswith('players'):
@@ -25,6 +27,8 @@ def add_csv_to_db(conn):
                 pass
 
 def players_dict(c):
+    """Returns dictionary of {year:{team:{players}}}.
+    c - sqlite3 cursor."""
     players_year = {}
     for f in os.listdir("../data/csv/"):
         if f.startswith('players'):
@@ -38,6 +42,9 @@ def players_dict(c):
     return players_year
 
 def find_players_team(calls, reports):
+    """Populate players' teams in calls table.
+    calls - df of calls table.
+    reports - df of reports table."""
     df = pd.merge(calls, reports, how='left', on='report')
     n = len(df)
     idx = 0
@@ -80,6 +87,9 @@ def find_players_team(calls, reports):
     return df[calls.columns]
 
 def find_winning_team(reports, gms):
+    """Populate teams' scores and winner in reports table.
+    reports - df of reports table.
+    gms - df of gms table."""
     tms = {'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS',
            'Brooklyn Nets': 'BKN', 'Charlotte Hornets': 'CHA',
            'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
