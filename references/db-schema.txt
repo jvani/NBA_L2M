@@ -1,0 +1,30 @@
+See csvs for players* and scheduled-gms schema. 
+
+tables
+players-14-15
+players-15-16
+players-16-17
+scheduled-gms
+reports
+calls
+
+reports
+0, report, TEXT, standardized report name
+1, away, TEXT, away team
+2, home, TEXT, home team
+3, date, TIMESTAMP, game date
+4, season, TEXT, season or playoff year
+5, away_score, REAL, final score of away team
+6, home_score, REAL, final score of home team
+7, winner, TEXT, winning team
+
+calls
+0, report, TEXT, standardized report name
+1, period, TEXT, period of play
+2, time, TEXT, time in period of play
+3, call, TEXT, call type
+4, committing, TEXT, committing player
+5, disadvantaged, TEXT, disadvantaged player
+6, decision, TEXT, NBA review decision
+7, committing_team, TEXT, committing player's team
+8, disadvantaged_team, TEXT, disadvantaged player's team 
