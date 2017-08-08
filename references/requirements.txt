@@ -1,0 +1,14 @@
+python2.7
+os
+re
+sys
+bs4
+math
+sqlite3
+pandas
+urllib
+PyPDF2
+pdfquery
+warnings
+datetime
+fuzzywuzzy
