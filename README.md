@@ -2,7 +2,16 @@
 `data/db/NBA-L2M.db` is current as of 08-08-2017.
 
 ## Overview
-The NBA assesses all 'officiated events' in the last two minutes (and OT) of games that were within 5 points with 2 minutes left in the game. All calls and 'notable non-calls' are reviewed following the same standards as the NBA's instant replay. This project collects and scrapes data from the published L2Ms (.pdf) and stores the results in a useable database.
+The NBA assesses all 'officiated events' in the last two minutes (and OT) of games that were within 5 points with 2 minutes left in the game. All calls and 'notable non-calls' are reviewed following the same standards as the NBA's instant replay. This project collects and scrapes data from all [published L2Ms](http://official.nba.com/nba-last-two-minute-reports-archive/) (.pdf) and stores the results in a queryable database. Supplemental data has been added including: final scores, winner, disadvantaged team, etc.
+
+## Contents
+Included in `data/db/NBA-L2M.db` are two primary tables.
+
+#### `reports`
+<img src="references/readme-pics/reports.png?raw=true" width="700" />
+
+#### `calls`
+<img src="references/readme-pics/calls.png?raw=true" width="900" />
 
 ## Reproducing the Database
 
