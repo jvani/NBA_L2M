@@ -4,7 +4,7 @@
 ## Overview
 The NBA assesses all 'officiated events' in the last two minutes (and OT) of games that were within 5 points with 2 minutes left in the game. All calls and 'notable non-calls' are reviewed following the same standards as the NBA's instant replay. This project collects and scrapes data from the published L2Ms (.pdf) and stores the results in a useable database.
 
-## Reproducing the Database:
+## Reproducing the Database
 
 ```
 cd src/
