@@ -104,9 +104,12 @@ def get_l2m_links(url, db=os.path.join("data", "l2m.db")):
     sys.stdout.flush()
     # -- Write dataframe to db (overwrite existing table).
     with sqlite3.connect(db) as conn:
-        existing = pd.read_sql("SELECT * FROM urls", conn) \
-            .set_index(["away", "home", "date"])
-        df = df[~df.isin(existing)]
+        try:
+            existing = pd.read_sql("SELECT * FROM urls", conn) \
+                .set_index(["away", "home", "date"])
+            df = df[~df.isin(existing)]
+        except:
+            pass
         df.to_sql("urls", conn, if_exists="append")
 
     print("L2M: Complete ({:.2f}s elapsed)                                   " \
