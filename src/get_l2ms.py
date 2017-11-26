@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import re
 import sys
@@ -8,7 +9,6 @@ import pdfquery
 import pandas as pd
 from datetime import datetime
 from bs4 import BeautifulSoup
-from __future__ import print_function
 
 
 def _url_metadata(l2m_url):
@@ -45,7 +45,6 @@ def _scrape_l2m(pdf_path, db=os.path.join("data", "l2m.db")):
     pdf_name = os.path.basename(pdf_path)
     pdf = pdfquery.PDFQuery(pdf_path)
     pdf.load()
-    print("L2M: Loaded {}".format(pdf_path))
 
     searches = {
         "yy": "LTPage[pageid='{}'] LTTextLineHorizontal:contains('Video')",
@@ -61,7 +60,6 @@ def _scrape_l2m(pdf_path, db=os.path.join("data", "l2m.db")):
     for pp in range(pdf.doc.catalog["Pages"].resolve()["Count"]):
         pg = pp + 1
         y0s = [float(y.attrib["y0"]) for y in pdf.pq(searches["yy"].format(pg))]
-        print("Page: {}, Rows: {}".format(pp + 1, len(y0s)))
         for y0 in y0s:
             peri = pdf.pq(searches["peri"].format(pg, y0 - 1, y0 + 14)).text()
             time = pdf.pq(searches["time"].format(pg, y0 - 1, y0 + 14)).text()
@@ -72,7 +70,7 @@ def _scrape_l2m(pdf_path, db=os.path.join("data", "l2m.db")):
             if peri.startswith("Q"):
                 data.append([pdf_name, peri, time, call, comm, disa, deci])
 
-    cols = ["period", "time", "call_type", "committing_player",
+    cols = ["pdf", "period", "time", "call_type", "committing_player",
             "disadvantaged_player", "review_decision"]
     df = pd.DataFrame(data, columns=cols)
 
@@ -106,7 +104,10 @@ def get_l2m_links(url, db=os.path.join("data", "l2m.db")):
     sys.stdout.flush()
     # -- Write dataframe to db (overwrite existing table).
     with sqlite3.connect(db) as conn:
-        df.to_sql("urls", conn, if_exists="replace")
+        existing = pd.read_sql("SELECT * FROM urls", conn) \
+            .set_index(["away", "home", "date"])
+        df = df[~df.isin(existing)]
+        df.to_sql("urls", conn, if_exists="append")
 
     print("L2M: Complete ({:.2f}s elapsed)                                   " \
         .format(time.time() - tstart))
@@ -114,11 +115,11 @@ def get_l2m_links(url, db=os.path.join("data", "l2m.db")):
     return df
 
 
-def download_pdfs(pdf_path=os.path.join(".", "pdfs"),
+def download_pdfs(pdf_folder=os.path.join(".", "pdfs"),
         db=os.path.join(".", "data", "l2m.db")):
     """Download new l2ms.
     Args:
-        pdf_path (str) - output path to save pdfs.
+        pdf_folder (str) - output folder to save pdfs.
         db (str) - path to sqlite db.
     """
 
@@ -132,19 +133,22 @@ def download_pdfs(pdf_path=os.path.join(".", "pdfs"),
             .set_index(["away", "home", "date"])
 
     # -- List pdfs that have already been downloaded.
-    pdfs = filter(lambda fname: fname.endswith(".pdf"), os.listdir(pdf_path))
+    pdfs = filter(lambda fname: fname.endswith(".pdf"), os.listdir(pdf_folder))
     # -- Create bool mask for l2ms that have not been downloaded.
     bool_mask = map(lambda x: os.path.basename(x) not in pdfs, df.l2m_url)
     ll = len(df[bool_mask])
     # -- Download all l2ms that have not been downloaded.
-    for n_row, (idx, row) in enumerate(df.iterrows()):
-        bname = os.path.basename(row.l2m_url)
-        pdf_path = os.path.join(pdf_path, bname)
-        urllib.urlretrieve(row.l2m_url, pdf_path)
-        _scrape_l2m(pdf_path)
-        print("L2M: Downloaded & Scraped {} ({}/{})                          " \
-            .format(bname, n_row, ll))
-        sys.stdout.flush()
+    for n_row, (idx, row) in enumerate(df[bool_mask].iterrows()):
+        try:
+            bname = os.path.basename(row.l2m_url)
+            pdf_path = os.path.join(pdf_folder, bname)
+            urllib.urlretrieve(row.l2m_url, pdf_path)
+            _scrape_l2m(pdf_path)
+            print("L2M: Downloaded & Scraped {} ({}/{})                      " \
+                .format(bname, n_row + 1, ll))
+            sys.stdout.flush()
+        except:
+            pass
 
     print("L2M: Complete ({:.2f}s elapsed)                                   " \
         .format(time.time() - tstart))
