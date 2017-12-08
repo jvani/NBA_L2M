@@ -298,7 +298,58 @@ def download_pdfs(pdf_folder=os.path.join("..", "pdfs"),
     sys.stdout.flush()
 
 
+def update_refs(db=os.path.join("..", "data", "l2m.db")):
+    """Get referees for each l2m.
+    Args:
+        db (str) - path to l2m.db.
+    """
+
+    tstart = time.time()
+    print("L2M: Updating referee table.                                       ")
+    sys.stdout.flush()
+
+    # -- Load existing data.
+    try:
+        with sqlite3.connect(db) as conn:
+            refs = pd.read_sql("SELECT * FROM refs", conn)
+    except:
+        refs = []
+
+    with sqlite3.connect(db) as conn:
+        urls = pd.read_sql("SELECT * FROM urls", conn)
+
+    # -- Get list of gameids that do not have corresponding ref data.
+    if len(refs) > 0:
+        gameids = list(set(urls.gameid.values) - set(refs.gameid.values))
+    else:
+        gameids = list(set(urls.gameid.values))
+
+    data = []
+    ngames = len(urls)
+    # -- For each gameid get referees.
+    for idx, gameid in enumerate(gameids):
+        refs = game.BoxscoreSummary(gameid).json["resultSets"][2]["rowSet"]
+        refs = [[gameid] + ref for ref in refs]
+        data = data + refs
+        print("L2M: Finding refs for game {} ({}/{})                         " \
+            .format(gameid, idx, ngames))
+        sys.stdout.flush()
+
+    # -- Put data in dataframe.
+    cols = ["gameid", "refid", "first_name", "last_name", "jersey_num"]
+    df = pd.DataFrame(data, columns=cols)
+
+    # -- Write dataframe to db.
+    with sqlite3.connect(db) as conn:
+        df.to_sql("refs", conn, if_exists="append")
+
+    print("L2M: Complete ({:.2f}s elapsed)                                   " \
+        .format(time.time() - tstart))
+    sys.stdout.flush()
+
+
 if __name__ == "__main__":
     df = get_l2m_links("http://official.nba.com/nba-last-two-minute-reports-archive/")
     df = get_l2m_links("http://official.nba.com/2017-18-nba-officiating-last-two-minute-reports/")
     download_pdfs()
+    update_refs()
