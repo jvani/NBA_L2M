@@ -9,17 +9,17 @@ The NBA assesses all 'officiated events' in the last two minutes (and OT) of gam
 Included in `data/l2m.db` are three tables:
 ### `urls`
 <p align="center">
-    <img width="600" src="https://github.com/jvani/NBA_L2M/blob/master/data/urls.png?raw=true"></img>
+    <img width="600" src="https://github.com/jvani/NBA_L2M/blob/master/imgs/urls.png?raw=true"></img>
 </p>
 
 ### `calls`
 <p align="center">
-    <img width="700" src="https://github.com/jvani/NBA_L2M/blob/master/data/calls.png?raw=true"></img>
+    <img width="700" src="https://github.com/jvani/NBA_L2M/blob/master/imgs/calls.png?raw=true"></img>
 </p>
 
 ### `refs`
 <p align="center">
-    <img width="300" src="https://github.com/jvani/NBA_L2M/blob/master/data/refs.png?raw=true"></img>
+    <img width="300" src="https://github.com/jvani/NBA_L2M/blob/master/imgs/refs.png?raw=true"></img>
 </p>
 
 ## Project Organization
@@ -29,3 +29,7 @@ Included in `data/l2m.db` are three tables:
     │   └── l2m.db         <- sqlite database.           
     └── nba_l2m            <- Python code to create db.
 
+## Plot
+<p align="center">
+    <img width="500" src="https://github.com/jvani/NBA_L2M/blob/master/imgs/refs_incpg.png?raw=true"></img>
+</p>
