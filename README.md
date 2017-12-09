@@ -27,7 +27,9 @@ Included in `data/l2m.db` are three tables:
     ├── README.md
     ├── data
     │   └── l2m.db         <- sqlite database.           
-    └── nba_l2m            <- Python code to create db.
+    ├── nba_l2m            <- Python code to create db.
+    ├── imgs               <- Images and plots.
+    └── notebooks          <- Plotting notebooks.
 
 ## Plot
 <p align="center">
