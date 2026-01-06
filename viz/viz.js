@@ -1,0 +1,212 @@
+(() => {
+  'use strict';
+const raw = `first_name,last_name,correct,incorrect,games,correct_pg,incorrect_pg,accuracy
+Bennett,Salvatore,93.0,18.0,7,13.285714285714286,2.5714285714285716,0.8378378378378378
+Vladimir,Voyard-Tadal,55.0,9.0,4,13.75,2.25,0.859375
+Jonathan,Sterling,129.0,18.0,8,16.125,2.25,0.8775510204081632
+Tre,Maddox,728.0,111.0,50,14.56,2.22,0.867699642431466
+Aaron,Smith,303.0,38.0,19,15.947368421052632,2.0,0.8885630498533724
+David,Jones,351.0,55.0,28,12.535714285714286,1.9642857142857142,0.8645320197044335
+Josh,Tiven,1015.0,133.0,68,14.926470588235293,1.9558823529411764,0.8841463414634146
+Leroy,Richardson,887.0,119.0,61,14.540983606557377,1.9508196721311475,0.8817097415506958
+Derrick,Collins,839.0,108.0,56,14.982142857142858,1.9285714285714286,0.8859556494192186
+Bennie,Adams,705.0,92.0,50,14.1,1.84,0.8845671267252195
+Derrick,Stafford,798.0,103.0,56,14.25,1.8392857142857142,0.8856825749167592
+Gary,Zielinski,716.0,99.0,54,13.25925925925926,1.8333333333333333,0.8785276073619632
+Ron,Garretson,666.0,84.0,46,14.478260869565217,1.826086956521739,0.888
+Justin,Van Duyne,897.0,104.0,58,15.46551724137931,1.793103448275862,0.8961038961038961
+Scott,Foster,1068.0,132.0,75,14.24,1.76,0.89
+Leon,Wood,775.0,86.0,49,15.816326530612244,1.7551020408163265,0.9001161440185831
+Tony,Brown,674.0,93.0,53,12.716981132075471,1.7547169811320755,0.878748370273794
+Ken,Mauer,947.0,105.0,62,15.274193548387096,1.6935483870967742,0.9001901140684411
+Sean,Wright,685.0,81.0,48,14.270833333333334,1.6875,0.8942558746736292
+Tom,Washington,933.0,113.0,67,13.925373134328359,1.6865671641791045,0.8919694072657743
+Matt,Boland,591.0,79.0,47,12.574468085106384,1.6808510638297873,0.8820895522388059
+John,Goble,757.0,88.0,53,14.283018867924529,1.6603773584905661,0.8958579881656805
+Zach,Zarba,907.0,104.0,63,14.396825396825397,1.6507936507936507,0.897131552917903
+James,Williams,888.0,98.0,60,14.8,1.6333333333333333,0.9006085192697769
+Marc,Davis,948.0,109.0,67,14.149253731343284,1.626865671641791,0.8968779564806055
+Mike,Callahan,694.0,89.0,55,12.618181818181819,1.6181818181818182,0.8863346104725415
+Michael,Smith,802.0,92.0,57,14.070175438596491,1.6140350877192982,0.8970917225950783
+Eli,Roe,325.0,45.0,28,11.607142857142858,1.6071428571428572,0.8783783783783784
+Jason,Phillips,790.0,86.0,54,14.62962962962963,1.5925925925925926,0.9018264840182648
+Haywoode,Workman,622.0,76.0,48,12.958333333333334,1.5833333333333333,0.8911174785100286
+Eric,Lewis,1031.0,107.0,68,15.161764705882353,1.5735294117647058,0.9059753954305799
+Kevin,Cutler,701.0,80.0,51,13.745098039215685,1.5686274509803921,0.8975672215108835
+Tony,Brothers,923.0,94.0,60,15.383333333333333,1.5666666666666667,0.9075712881022615
+Mark,Ayotte,544.0,61.0,39,13.948717948717949,1.564102564102564,0.8991735537190083
+Kane,Fitzgerald,911.0,93.0,61,14.934426229508198,1.5245901639344261,0.9073705179282868
+Monty,McCutchen,1068.0,103.0,68,15.705882352941176,1.5147058823529411,0.9120409906063194
+Mitchell,Ervin,541.0,62.0,41,13.195121951219512,1.5121951219512195,0.8971807628524047
+Violet,Palmer,30.0,6.0,4,7.5,1.5,0.8333333333333334
+Marat,Kogut,604.0,73.0,49,12.326530612244898,1.489795918367347,0.8921713441654358
+Eric,Dalen,715.0,73.0,49,14.591836734693878,1.489795918367347,0.9073604060913706
+Pat,Fraher,772.0,82.0,56,13.785714285714286,1.4642857142857142,0.9039812646370023
+Curtis,Blair,528.0,57.0,39,13.538461538461538,1.4615384615384615,0.9025641025641026
+Kevin,Scott,683.0,74.0,51,13.392156862745098,1.4509803921568627,0.9022457067371202
+Bill,Spooner,648.0,71.0,49,13.224489795918368,1.4489795918367347,0.9012517385257302
+Karl,Lane,661.0,64.0,45,14.688888888888888,1.4222222222222223,0.9117241379310345
+Courtney,Kirkland,591.0,68.0,48,12.3125,1.4166666666666667,0.8968133535660091
+David,Guthrie,726.0,75.0,53,13.69811320754717,1.4150943396226414,0.9063670411985019
+Scott,Twardoski,665.0,65.0,46,14.456521739130435,1.4130434782608696,0.910958904109589
+Brian,Forte,641.0,64.0,46,13.934782608695652,1.391304347826087,0.9092198581560283
+Brent,Barnaky,642.0,69.0,50,12.84,1.38,0.9029535864978903
+Jacyn,Goble,253.0,22.0,16,15.8125,1.375,0.92
+Steve,Anderson,537.0,48.0,35,15.342857142857143,1.3714285714285714,0.9179487179487179
+James,Capers,887.0,77.0,57,15.56140350877193,1.3508771929824561,0.9201244813278008
+Rodney,Mott,835.0,79.0,59,14.152542372881356,1.3389830508474576,0.9135667396061269
+Lauren,Holtkamp,674.0,60.0,45,14.977777777777778,1.3333333333333333,0.9182561307901907
+J.T.,Orr,741.0,69.0,52,14.25,1.3269230769230769,0.9148148148148149
+Brett,Nansel,340.0,30.0,23,14.782608695652174,1.3043478260869565,0.918918918918919
+Sean,Corbin,643.0,61.0,47,13.680851063829786,1.297872340425532,0.9133522727272727
+Ed,Malloy,652.0,62.0,48,13.583333333333334,1.2916666666666667,0.9131652661064426
+Ben,Taylor,501.0,49.0,38,13.18421052631579,1.2894736842105263,0.9109090909090909
+Scott,Wall,590.0,62.0,49,12.040816326530612,1.2653061224489797,0.9049079754601227
+Dan,Crawford,691.0,73.0,58,11.913793103448276,1.2586206896551724,0.9044502617801047
+Dedric,Taylor,482.0,45.0,37,13.027027027027026,1.2162162162162162,0.9146110056925996
+Nick,Buchert,702.0,62.0,51,13.764705882352942,1.2156862745098038,0.918848167539267
+Bill,Kennedy,817.0,68.0,57,14.333333333333334,1.1929824561403508,0.9231638418079096
+Gediminas,Petraitis,543.0,49.0,42,12.928571428571429,1.1666666666666667,0.9172297297297297
+Derek,Richardson,635.0,52.0,47,13.51063829787234,1.1063829787234043,0.9243085880640466
+Tyler,Ford,521.0,42.0,38,13.710526315789474,1.105263157894737,0.9253996447602132
+Joe,Crawford,132.0,11.0,10,13.2,1.1,0.9230769230769231
+Phenizee,Ransom,29.0,2.0,2,14.5,1.0,0.9354838709677419
+Jason,Goldenberg,72.0,4.0,4,18.0,1.0,0.9473684210526315
+JB,DeRosa,16.0,1.0,1,16.0,1.0,0.9411764705882353
+Mark,Lindsay,709.0,50.0,51,13.901960784313726,0.9803921568627451,0.9341238471673254
+CJ,Washington,188.0,10.0,12,15.666666666666666,0.8333333333333334,0.9494949494949495
+Ray,Acosta,50.0,2.0,3,16.666666666666668,0.6666666666666666,0.9615384615384616
+Randy,Richardson,18.0,0.0,1,18.0,0.0,1.0
+Brandon,Adair,15.0,0.0,1,15.0,0.0,1.0
+`;
+
+try {
+  const rawData = d3.csvParse(raw);
+  const data = rawData
+    .map(d => ({
+      referee: d.first_name + ' ' + d.last_name,
+      incorrect_pg: +d.incorrect_pg,
+      l2ms: +d.games
+    }))
+    .filter(d => d.l2ms >= 20);
+
+  if (data.length === 0) {
+    d3.select('#d3-container').append('div').style('color', 'gray').text('No referees with >= 20 games found.');
+  } else {
+    // Sort ascending so low incorrect/PG appears at the top
+    data.sort((a, b) => a.incorrect_pg - b.incorrect_pg);
+
+    const margin = { top: 30, right: 20, bottom: 40, left: 110 };
+
+    const render = () => {
+      const container = document.getElementById('d3-container');
+      const containerWidth = container.clientWidth || 900;
+      const totalHeight = Math.max(360, data.length * 18);
+      const width = Math.max(300, containerWidth - margin.left - margin.right);
+      const innerHeight = totalHeight - margin.top - margin.bottom;
+
+      // Use existing svg#viz inside the post
+      const svgRoot = d3.select('#viz')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', totalHeight)
+        .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${totalHeight}`);
+
+      // Clear previous chart content
+      svgRoot.selectAll('*').remove();
+
+      const svg = svgRoot.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const xMax = d3.max(data, d => d.incorrect_pg) * 1.05;
+      const x = d3.scaleLinear().range([0, width]).domain([0, xMax]);
+      const y = d3.scaleBand().range([0, innerHeight]).domain(data.map(d => d.referee)).padding(0.1);
+
+      const medianVal = d3.median(data, d => d.incorrect_pg);
+      const color = d3.scaleLinear()
+        .domain([d3.min(data, d => d.incorrect_pg), medianVal, d3.max(data, d => d.incorrect_pg)])
+        .range(['#15418c', '#dfdfe5', '#cb0729']);
+
+      const yAxis = svg.append('g').call(d3.axisLeft(y));
+      yAxis.selectAll('text').style('font-size', '11.5px');
+      svg.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x));
+
+      svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', innerHeight + 32)
+        .attr('text-anchor', 'middle')
+        .style('fill', '#333')
+        .style('font-size', '13px')
+        .text('Incorrect Calls Per Game');
+
+      d3.select('body').selectAll('.tooltip').remove();
+      const tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('pointer-events', 'none')
+        .style('background', 'rgba(0,0,0,0.85)')
+        .style('color', '#fff')
+        .style('padding', '6px 8px')
+        .style('border-radius', '4px')
+        .style('font-size', '12px')
+        .style('z-index', '9999')
+        .style('opacity', 0)
+        .style('transition', 'opacity 120ms ease');
+
+      const band = y.bandwidth();
+      const barHeight = Math.max(4, band * 0.9);
+
+      svg.selectAll('.bar').data(data).enter().append('rect')
+        .attr('class', 'bar')
+        .attr('y', d => y(d.referee) + (band - barHeight) / 2)
+        .attr('height', barHeight)
+        .attr('x', 0)
+        .attr('width', d => x(d.incorrect_pg))
+        .attr('fill', d => color(d.incorrect_pg))
+        .on('mouseover', function(event, d) {
+          d3.select(this).attr('stroke', '#333').attr('stroke-width', 1);
+          tooltip.transition().duration(120).style('opacity', 1);
+          tooltip.html(`<strong>${d.referee}</strong><br/>Incorrect/PG: ${d.incorrect_pg.toFixed(4)}<br/>L2Ms: ${d.l2ms}`)
+            .style('left', (event.pageX + 10) + 'px').style('top', (event.pageY + 10) + 'px');
+        })
+        .on('mousemove', function(event) {
+          tooltip.style('left', (event.pageX + 10) + 'px').style('top', (event.pageY + 10) + 'px');
+        })
+        .on('mouseout', function() {
+          d3.select(this).attr('stroke', null);
+          tooltip.transition().duration(120).style('opacity', 0);
+        });
+
+      const medianIndex = Math.floor(data.length / 2);
+      const medianRef = data[medianIndex];
+      const yCenter = y(medianRef.referee) + y.bandwidth() / 2;
+      const medianBarWidth = x(medianRef.incorrect_pg);
+
+      svg.append('line')
+        .attr('x1', 0).attr('x2', medianBarWidth + 5)
+        .attr('y1', yCenter).attr('y2', yCenter)
+        .attr('stroke', '#666').attr('stroke-dasharray', '4 4')
+        .attr('stroke-width', 2).attr('opacity', 0.6);
+
+      svg.append('text')
+        .attr('x', medianBarWidth + 6)
+        .attr('y', yCenter + 4)
+        .attr('text-anchor', 'start')
+        .style('fill', '#444')
+        .style('font-size', '12px')
+        .text('Median');
+    }
+
+    // Initial render
+    render();
+
+    // Debounced resize handler
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { render(); resizeTimer = null; }, 150);
+    });
+  }
+} catch (err) {
+  d3.select('#d3-container').append('div').style('color', 'red').text('Failed to load data: ' + err);
+}
+})();
